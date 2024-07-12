@@ -5,27 +5,23 @@ import numpy as np
 import cvzone
 from pynput.keyboard import Controller
 
-# Initialize video capture
+
 cap = cv2.VideoCapture(0)
 cap.set(3, 1280)
 cap.set(4, 720)
 
-# Initialize hand detector
+
 detector = HandDetector(detectionCon=0)
 
-# Define the keys layout
 keys = [["Delete", "Space"],
         ["Z", "X", "C", "V", "B", "N", "M", ",", ".", "/"],
         ["A", "S", "D", "F", "G", "H", "J", "K", "L", "'"],
         ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"]]
 
-# Initialize text
 finalText = ""
 
-# Initialize the keyboard controller
 keyboard = Controller()
 
-# Function to draw buttons
 def drawAll(img, buttonList):
     for button in buttonList:
         x, y = button.pos
@@ -35,14 +31,12 @@ def drawAll(img, buttonList):
         cv2.putText(img, button.text, (x + 20, y + 65), cv2.FONT_HERSHEY_PLAIN, 2 if button.text == "Space" else 4, (255, 255, 255), 4)
     return img
 
-# Button class
 class Button():
     def __init__(self, pos, text, size=[85, 85]):
         self.pos = pos
         self.size = size
         self.text = text
-
-# Create button list
+            
 buttonList = []
 for i in range(len(keys)):
     for j, key in enumerate(keys[i]):
@@ -53,11 +47,11 @@ for i in range(len(keys)):
         else:
             buttonList.append(Button([j * 100 + 50, 100 * (len(keys) - 1 - i) + 50], key))
 
-# Main loop
+
 while True:
     success, img = cap.read()
     
-    # Flip the image horizontally
+  
     img = cv2.flip(img, 1)
     
     img = detector.findHands(img)
@@ -74,7 +68,7 @@ while True:
                 l, _, _ = detector.findDistance(8, 12, img, draw=False)
                 print(l)
 
-                # When Clicked
+              
                 if l > 45 and l < 50:
                     cv2.rectangle(img, button.pos, (x + w, y + h), (0, 255, 0), cv2.FILLED)
                     cv2.putText(img, button.text, (x + 20, y + 65), cv2.FONT_HERSHEY_PLAIN, 2 if button.text == "Space" else 4, (255, 255, 255), 4)
